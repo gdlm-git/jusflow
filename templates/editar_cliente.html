@@ -84,6 +84,19 @@ border-radius:14px;
 padding:14px 16px;
 }
 
+.form-select{
+background:rgba(30,41,59,0.95);
+border:1px solid rgba(148,163,184,0.18);
+color:#f8fafc;
+border-radius:14px;
+padding:14px 16px;
+}
+
+.form-select option{
+background:#1e293b;
+color:#f8fafc;
+}
+
 .btn-brand{
 background:linear-gradient(135deg,#3b82f6,#2563eb);
 border:none;
@@ -145,9 +158,24 @@ Edite as informações do cliente abaixo.
 <input type="text" name="telefone" class="form-control" value="{{ cliente[3] }}" required>
 </div>
 
-<div class="mb-4">
+<div class="mb-3">
 <label class="form-label">Email</label>
 <input type="email" name="email" class="form-control" value="{{ cliente[4] }}" required>
+</div>
+
+<div class="mb-4">
+<label class="form-label">Tipo de Causa</label>
+<select name="tipo_causa" class="form-select" required>
+<option value="">Selecione uma opção</option>
+<option value="Trabalhista" {% if cliente[5] == 'Trabalhista' %}selected{% endif %}>Trabalhista</option>
+<option value="Cível" {% if cliente[5] == 'Cível' %}selected{% endif %}>Cível</option>
+<option value="Previdenciária" {% if cliente[5] == 'Previdenciária' %}selected{% endif %}>Previdenciária</option>
+<option value="Família" {% if cliente[5] == 'Família' %}selected{% endif %}>Família</option>
+<option value="Consumidor" {% if cliente[5] == 'Consumidor' %}selected{% endif %}>Consumidor</option>
+<option value="Criminal" {% if cliente[5] == 'Criminal' %}selected{% endif %}>Criminal</option>
+<option value="Tributária" {% if cliente[5] == 'Tributária' %}selected{% endif %}>Tributária</option>
+<option value="Outro" {% if cliente[5] == 'Outro' %}selected{% endif %}>Outro</option>
+</select>
 </div>
 
 <div class="d-flex flex-wrap gap-2">

@@ -46,9 +46,10 @@ def salvar_cliente():
     cpf = request.form["cpf"].strip()
     telefone = request.form["telefone"].strip()
     email = request.form["email"].strip()
+    tipo_causa = request.form["tipo_causa"].strip()
 
     # Validação para não salvar vazio
-    if not nome or not cpf or not telefone or not email:
+    if not nome or not cpf or not telefone or not email or not tipo_causa:
         flash("Preencha todos os campos antes de cadastrar.")
         return redirect(url_for("cadastro"))
 
@@ -72,10 +73,10 @@ def salvar_cliente():
 
     cursor.execute(
         """
-        INSERT INTO clientes (nome, cpf, telefone, email)
-        VALUES (%s, %s, %s, %s)
+        INSERT INTO clientes (nome, cpf, telefone, email, tipo_causa)
+        VALUES (%s, %s, %s, %s, %s)
         """,
-        (nome, cpf, telefone, email)
+        (nome, cpf, telefone, email, tipo_causa)
     )
 
     conn.commit()
@@ -99,14 +100,14 @@ def clientes():
     if busca:
         cursor.execute(
             """
-            SELECT id, nome, cpf, telefone, email
+            SELECT id, nome, cpf, telefone, email, tipo_causa
             FROM clientes
             WHERE nome ILIKE %s OR cpf ILIKE %s
             """,
             (f"%{busca}%", f"%{busca}%")
         )
     else:
-        cursor.execute("SELECT id, nome, cpf, telefone, email FROM clientes")
+        cursor.execute("SELECT id, nome, cpf, telefone, email, tipo_causa FROM clientes")
 
     clientes = cursor.fetchall()
 
@@ -122,7 +123,7 @@ def editar_cliente(id):
     cursor = conn.cursor()
 
     cursor.execute(
-        "SELECT id, nome, cpf, telefone, email FROM clientes WHERE id = %s",
+        "SELECT id, nome, cpf, telefone, email, tipo_causa FROM clientes WHERE id = %s",
         (id,)
     )
 
@@ -141,21 +142,37 @@ def atualizar_cliente(id):
     cpf = request.form["cpf"].strip()
     telefone = request.form["telefone"].strip()
     email = request.form["email"].strip()
+    tipo_causa = request.form["tipo_causa"].strip()
 
-    if not nome or not cpf or not telefone or not email:
+    if not nome or not cpf or not telefone or not email or not tipo_causa:
         flash("Preencha todos os campos antes de salvar.")
         return redirect(url_for("editar_cliente", id=id))
 
     conn = get_connection()
     cursor = conn.cursor()
 
+    # Verifica se já existe outro cliente com o mesmo CPF
+    cursor.execute(
+        "SELECT id FROM clientes WHERE cpf = %s AND id <> %s",
+        (cpf, id)
+    )
+
+    cliente_existente = cursor.fetchone()
+
+    if cliente_existente:
+        cursor.close()
+        conn.close()
+
+        flash("Já existe outro cliente com este CPF!")
+        return redirect(url_for("editar_cliente", id=id))
+
     cursor.execute(
         """
         UPDATE clientes
-        SET nome = %s, cpf = %s, telefone = %s, email = %s
+        SET nome = %s, cpf = %s, telefone = %s, email = %s, tipo_causa = %s
         WHERE id = %s
         """,
-        (nome, cpf, telefone, email, id)
+        (nome, cpf, telefone, email, tipo_causa, id)
     )
 
     conn.commit()
