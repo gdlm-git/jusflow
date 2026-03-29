@@ -37,7 +37,7 @@
 
         .form-card {
             width: 100%;
-            max-width: 900px;
+            max-width: 980px;
             background: rgba(15, 23, 42, 0.88);
             border: 1px solid rgba(148, 163, 184, 0.12);
             border-radius: 24px;
@@ -80,6 +80,12 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 16px;
             margin-bottom: 28px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
         }
 
         .info-item {
@@ -130,6 +136,10 @@
             color: #000000;
         }
 
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
         .btn-brand {
             background: linear-gradient(135deg, #3b82f6, #2563eb);
             border: none;
@@ -162,7 +172,8 @@
         }
 
         @media (max-width: 768px) {
-            .info-grid {
+            .info-grid,
+            .form-grid {
                 grid-template-columns: 1fr;
             }
 
@@ -217,32 +228,72 @@
         </div>
 
         <form action="{{ url_for('salvar_processo', cliente_id=cliente.id) }}" method="POST">
-            <div class="mb-3">
-                <label class="form-label">Número do processo</label>
-                <input type="text" name="numero_processo" class="form-control" required>
+            <div class="form-grid">
+                <div>
+                    <label class="form-label">Número do processo</label>
+                    <input type="text" name="numero_processo" class="form-control" required>
+                </div>
+
+                <div>
+                    <label class="form-label">Data de abertura</label>
+                    <input type="date" name="data_abertura" class="form-control" required>
+                </div>
+
+                <div>
+                    <label class="form-label">Tipo do processo</label>
+                    <select name="tipo_processo" id="tipo_processo" class="form-select" required onchange="atualizarVaras()">
+                        <option value="">Selecione</option>
+                        <option value="Trabalhista">Trabalhista</option>
+                        <option value="Cível">Cível</option>
+                        <option value="Criminal">Criminal</option>
+                        <option value="Tributário">Tributário</option>
+                        <option value="Família">Família</option>
+                        <option value="Previdenciário">Previdenciário</option>
+                        <option value="Direito Autoral">Direito Autoral</option>
+                        <option value="Direito Digital">Direito Digital</option>
+                        <option value="Consumidor">Consumidor</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">Vara</label>
+                    <select name="vara" id="vara" class="form-select" required>
+                        <option value="">Selecione o tipo primeiro</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="form-label">Advogado responsável</label>
+                    <input type="text" name="advogado_responsavel" class="form-control" required>
+                </div>
+
+                <div>
+                    <label class="form-label">Parte contrária</label>
+                    <input type="text" name="parte_contraria" class="form-control" required>
+                </div>
+
+                <div>
+                    <label class="form-label">Valor da causa</label>
+                    <input type="number" step="0.01" min="0" name="valor_causa" class="form-control" placeholder="Ex: 15000.00" required>
+                </div>
+
+                <div>
+                    <label class="form-label">Status do processo</label>
+                    <select name="status_processo" class="form-select" required>
+                        <option value="">Selecione</option>
+                        <option value="Em andamento">Em andamento</option>
+                        <option value="Concluído">Concluído</option>
+                        <option value="Encerrado">Encerrado</option>
+                    </select>
+                </div>
+
+                <div class="full-width">
+                    <label class="form-label">Descrição</label>
+                    <textarea name="descricao" class="form-control" rows="4" required></textarea>
+                </div>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label">Descrição</label>
-                <textarea name="descricao" class="form-control" rows="4" required></textarea>
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Data de abertura</label>
-                <input type="date" name="data_abertura" class="form-control" required>
-            </div>
-
-            <div class="mb-4">
-                <label class="form-label">Status do processo</label>
-                <select name="status_processo" class="form-select" required>
-                    <option value="">Selecione</option>
-                    <option value="Em andamento">Em andamento</option>
-                    <option value="Concluído">Concluído</option>
-                    <option value="Encerrado">Encerrado</option>
-                </select>
-            </div>
-
-            <div class="d-flex flex-wrap gap-2">
+            <div class="d-flex flex-wrap gap-2 mt-4">
                 <button type="submit" class="btn btn-brand">
                     Salvar Processo
                 </button>
@@ -262,6 +313,44 @@
 <footer>
     &copy; 2026 JusFlow • Projeto acadêmico — Faculdade Impacta • Desenvolvido por Gedeão Lima
 </footer>
+
+<script>
+    function atualizarVaras() {
+        const tipo = document.getElementById("tipo_processo").value;
+        const varaSelect = document.getElementById("vara");
+
+        varaSelect.innerHTML = '<option value="">Selecione</option>';
+
+        let opcoes = [];
+
+        if (tipo === "Trabalhista") {
+            opcoes = [
+                "1ª Vara do Trabalho",
+                "2ª Vara do Trabalho",
+                "3ª Vara do Trabalho"
+            ];
+        } else if (tipo === "Criminal") {
+            opcoes = [
+                "1ª Vara Criminal",
+                "2ª Vara Criminal",
+                "3ª Vara Criminal"
+            ];
+        } else if (tipo) {
+            opcoes = [
+                "1ª Vara Cível",
+                "2ª Vara Cível",
+                "3ª Vara Cível"
+            ];
+        }
+
+        opcoes.forEach(function(opcao) {
+            const option = document.createElement("option");
+            option.value = opcao;
+            option.textContent = opcao;
+            varaSelect.appendChild(option);
+        });
+    }
+</script>
 
 </body>
 </html>

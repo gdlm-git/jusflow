@@ -66,7 +66,7 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            gap: 20px;
+            gap: 24px;
             flex-wrap: wrap;
         }
 
@@ -79,20 +79,56 @@
         .processo-meta {
             color: #94a3b8;
             font-size: 0.98rem;
+            margin-bottom: 16px;
         }
 
-        .status-box {
-            min-width: 230px;
-            background: rgba(30, 41, 59, 0.72);
-            border: 1px solid rgba(148, 163, 184, 0.12);
-            border-radius: 18px;
-            padding: 16px 18px;
+        .cliente-topo {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 12px;
+            margin-top: 16px;
         }
 
-        .status-label {
-            font-size: 0.85rem;
+        .cliente-topo-item {
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.10);
+            border-radius: 14px;
+            padding: 14px;
+        }
+
+        .cliente-topo-label {
+            font-size: 0.82rem;
             color: #94a3b8;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
+        }
+
+        .cliente-topo-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #f8fafc;
+            word-break: break-word;
+        }
+
+        .top-actions-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .status-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .status-inline-label {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            font-weight: 600;
         }
 
         .status-badge {
@@ -110,7 +146,7 @@
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
-            margin-top: 22px;
+            justify-content: flex-end;
         }
 
         .btn-brand {
@@ -176,12 +212,22 @@
             word-break: break-word;
         }
 
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
         footer {
             text-align: center;
             padding: 24px;
             margin-top: auto;
             color: #64748b;
             font-size: 0.9rem;
+        }
+
+        @media (max-width: 900px) {
+            .cliente-topo {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
@@ -197,8 +243,13 @@
                 flex-direction: column;
             }
 
-            .status-box {
-                width: 100%;
+            .top-actions-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero-actions {
+                justify-content: flex-start;
             }
         }
     </style>
@@ -218,25 +269,44 @@
 
         <div class="hero-card">
             <div class="hero-header">
-                <div>
+                <div class="flex-grow-1">
                     <div class="processo-numero">Processo {{ processo.numero_processo }}</div>
-                    <div class="processo-meta">Vinculado ao cliente {{ processo.cliente_nome }}</div>
+                    <div class="processo-meta">Cliente: {{ processo.cliente_nome }}</div>
+
+                    <div class="cliente-topo">
+                        <div class="cliente-topo-item">
+                            <div class="cliente-topo-label">CPF</div>
+                            <div class="cliente-topo-value">{{ processo.cliente_cpf }}</div>
+                        </div>
+
+                        <div class="cliente-topo-item">
+                            <div class="cliente-topo-label">Telefone</div>
+                            <div class="cliente-topo-value">{{ processo.cliente_telefone }}</div>
+                        </div>
+
+                        <div class="cliente-topo-item">
+                            <div class="cliente-topo-label">Email</div>
+                            <div class="cliente-topo-value">{{ processo.cliente_email }}</div>
+                        </div>
+                    </div>
+
+                    <div class="top-actions-row">
+                        <div class="status-inline">
+                            <span class="status-inline-label">Status do processo</span>
+                            <span class="status-badge">{{ processo.status_processo }}</span>
+                        </div>
+
+                        <div class="hero-actions">
+                            <a href="{{ url_for('detalhe_cliente', id=processo.cliente_id) }}" class="btn btn-outline-soft">
+                                Voltar para cliente
+                            </a>
+
+                            <a href="{{ url_for('clientes') }}" class="btn btn-outline-soft">
+                                Voltar para lista
+                            </a>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="status-box">
-                    <div class="status-label">Status atual do processo</div>
-                    <div class="status-badge">{{ processo.status_processo }}</div>
-                </div>
-            </div>
-
-            <div class="hero-actions">
-                <a href="{{ url_for('detalhe_cliente', id=processo.cliente_id) }}" class="btn btn-outline-soft">
-                    Voltar para cliente
-                </a>
-
-                <a href="{{ url_for('clientes') }}" class="btn btn-outline-soft">
-                    Voltar para lista
-                </a>
             </div>
         </div>
 
@@ -255,6 +325,42 @@
                 </div>
 
                 <div class="info-item">
+                    <div class="info-label">Tipo do processo</div>
+                    <div class="info-value">{{ processo.tipo_processo }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Vara</div>
+                    <div class="info-value">{{ processo.vara }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Advogado responsável</div>
+                    <div class="info-value">{{ processo.advogado_responsavel }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Parte contrária</div>
+                    <div class="info-value">{{ processo.parte_contraria }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Valor da causa</div>
+                    <div class="info-value">
+                        {% if processo.valor_causa is not none %}
+                            R$ {{ "{:,.2f}".format(processo.valor_causa).replace(",", "X").replace(".", ",").replace("X", ".") }}
+                        {% else %}
+                            R$ 0,00
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-item full-width">
+                    <div class="info-label">Descrição</div>
+                    <div class="info-value">{{ processo.descricao }}</div>
+                </div>
+
+                <div class="info-item">
                     <div class="info-label">Data de abertura</div>
                     <div class="info-value">{{ processo.data_abertura }}</div>
                 </div>
@@ -262,37 +368,6 @@
                 <div class="info-item">
                     <div class="info-label">Criado em</div>
                     <div class="info-value">{{ processo.created_at }}</div>
-                </div>
-
-                <div class="info-item" style="grid-column: 1 / -1;">
-                    <div class="info-label">Descrição</div>
-                    <div class="info-value">{{ processo.descricao }}</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="panel">
-            <div class="section-title">Cliente vinculado</div>
-
-            <div class="info-grid">
-                <div class="info-item">
-                    <div class="info-label">Nome</div>
-                    <div class="info-value">{{ processo.cliente_nome }}</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-label">CPF</div>
-                    <div class="info-value">{{ processo.cliente_cpf }}</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-label">Telefone</div>
-                    <div class="info-value">{{ processo.cliente_telefone }}</div>
-                </div>
-
-                <div class="info-item">
-                    <div class="info-label">Email</div>
-                    <div class="info-value">{{ processo.cliente_email }}</div>
                 </div>
             </div>
         </div>

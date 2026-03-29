@@ -139,7 +139,14 @@ def detalhe_cliente(id):
 
     cursor.execute(
         """
-        SELECT id, numero_processo, descricao, data_abertura, status_processo
+        SELECT
+            id,
+            numero_processo,
+            descricao,
+            data_abertura,
+            status_processo,
+            tipo_processo,
+            vara
         FROM processos
         WHERE cliente_id = %s
         ORDER BY id DESC
@@ -189,8 +196,23 @@ def salvar_processo(cliente_id):
     descricao = request.form["descricao"].strip()
     data_abertura = request.form["data_abertura"].strip()
     status_processo = request.form["status_processo"].strip()
+    tipo_processo = request.form["tipo_processo"].strip()
+    vara = request.form["vara"].strip()
+    parte_contraria = request.form["parte_contraria"].strip()
+    valor_causa = request.form["valor_causa"].strip()
+    advogado_responsavel = request.form["advogado_responsavel"].strip()
 
-    if not numero_processo or not descricao or not data_abertura or not status_processo:
+    if (
+        not numero_processo
+        or not descricao
+        or not data_abertura
+        or not status_processo
+        or not tipo_processo
+        or not vara
+        or not parte_contraria
+        or not valor_causa
+        or not advogado_responsavel
+    ):
         flash("Preencha todos os campos do processo antes de salvar.")
         return redirect(url_for("cadastro_processo", cliente_id=cliente_id))
 
@@ -199,11 +221,33 @@ def salvar_processo(cliente_id):
 
     cursor.execute(
         """
-        INSERT INTO processos (cliente_id, numero_processo, descricao, data_abertura, status_processo)
-        VALUES (%s, %s, %s, %s, %s)
+        INSERT INTO processos (
+            cliente_id,
+            numero_processo,
+            descricao,
+            data_abertura,
+            status_processo,
+            tipo_processo,
+            vara,
+            parte_contraria,
+            valor_causa,
+            advogado_responsavel
+        )
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """,
-        (cliente_id, numero_processo, descricao, data_abertura, status_processo)
+        (
+            cliente_id,
+            numero_processo,
+            descricao,
+            data_abertura,
+            status_processo,
+            tipo_processo,
+            vara,
+            parte_contraria,
+            valor_causa,
+            advogado_responsavel
+        )
     )
 
     novo_processo_id = cursor.fetchone()[0]
@@ -231,6 +275,11 @@ def detalhe_processo(id):
             p.data_abertura,
             p.status_processo,
             p.created_at,
+            p.tipo_processo,
+            p.vara,
+            p.parte_contraria,
+            p.valor_causa,
+            p.advogado_responsavel,
             c.nome AS cliente_nome,
             c.cpf AS cliente_cpf,
             c.telefone AS cliente_telefone,
