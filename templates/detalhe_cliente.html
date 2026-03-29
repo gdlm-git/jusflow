@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JusFlow - Detalhe do Cliente</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #020617 0%, #0f172a 55%, #111827 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .container-fluid {
+            flex-grow: 1;
+        }
+
+        .topbar {
+            padding: 28px 0 10px;
+        }
+
+        .logo-brand {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #93c5fd;
+            letter-spacing: 0.5px;
+        }
+
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
+
+        .page-subtitle {
+            color: #94a3b8;
+            margin-bottom: 0;
+        }
+
+        .panel {
+            margin-top: 24px;
+            background: rgba(15, 23, 42, 0.88);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+        }
+
+        .hero-card {
+            margin-top: 24px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(17, 24, 39, 0.96));
+            border: 1px solid rgba(148, 163, 184, 0.14);
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+        }
+
+        .hero-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .cliente-nome {
+            font-size: 2.1rem;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+
+        .cliente-meta {
+            color: #94a3b8;
+            font-size: 0.98rem;
+        }
+
+        .status-box {
+            min-width: 230px;
+            background: rgba(30, 41, 59, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            border-radius: 18px;
+            padding: 16px 18px;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.16);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.28);
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+        }
+
+        .btn-brand {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 18px;
+            text-decoration: none;
+        }
+
+        .btn-brand:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+        }
+
+        .btn-outline-soft {
+            background: transparent;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            color: #e2e8f0;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 18px;
+            text-decoration: none;
+        }
+
+        .btn-outline-soft:hover {
+            background: rgba(148, 163, 184, 0.08);
+            color: white;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 18px;
+            color: #93c5fd;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .info-item {
+            background: rgba(30, 41, 59, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.10);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #f8fafc;
+            word-break: break-word;
+        }
+
+        .status-flow {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 12px;
+        }
+
+        .flow-step {
+            background: rgba(30, 41, 59, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.10);
+            border-radius: 16px;
+            padding: 16px;
+            min-height: 110px;
+        }
+
+        .flow-step.active {
+            background: rgba(59, 130, 246, 0.14);
+            border: 1px solid rgba(59, 130, 246, 0.28);
+            box-shadow: inset 0 0 0 1px rgba(59, 130, 246, 0.15);
+        }
+
+        .flow-step-number {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .flow-step-title {
+            font-weight: 700;
+            color: #f8fafc;
+            margin-bottom: 6px;
+        }
+
+        .flow-step-desc {
+            font-size: 0.86rem;
+            color: #94a3b8;
+            line-height: 1.4;
+        }
+
+        .empty-processos {
+            background: rgba(30, 41, 59, 0.72);
+            border: 1px dashed rgba(148, 163, 184, 0.22);
+            border-radius: 16px;
+            padding: 24px;
+            color: #94a3b8;
+        }
+
+        .processos-lista {
+            display: grid;
+            gap: 16px;
+        }
+
+        .processo-card {
+            background: rgba(30, 41, 59, 0.72);
+            border: 1px solid rgba(148, 163, 184, 0.10);
+            border-radius: 16px;
+            padding: 18px;
+        }
+
+        .processo-topo {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+
+        .processo-numero {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .processo-link {
+            color: #93c5fd;
+            text-decoration: none;
+        }
+
+        .processo-link:hover {
+            color: #dbeafe;
+            text-decoration: underline;
+        }
+
+        .processo-status {
+            display: inline-block;
+            padding: 7px 12px;
+            border-radius: 999px;
+            background: rgba(59, 130, 246, 0.16);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.28);
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .processo-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .processo-campo {
+            background: rgba(15, 23, 42, 0.55);
+            border: 1px solid rgba(148, 163, 184, 0.08);
+            border-radius: 12px;
+            padding: 14px;
+        }
+
+        .processo-label {
+            font-size: 0.82rem;
+            color: #94a3b8;
+            margin-bottom: 6px;
+        }
+
+        .processo-valor {
+            font-size: 0.96rem;
+            font-weight: 600;
+            color: #f8fafc;
+            word-break: break-word;
+        }
+
+        footer {
+            text-align: center;
+            padding: 24px;
+            margin-top: auto;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1200px) {
+            .status-flow {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-grid,
+            .processo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .status-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .cliente-nome {
+                font-size: 1.7rem;
+            }
+
+            .hero-header {
+                flex-direction: column;
+            }
+
+            .status-box {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% set fluxo_status = [
+        {"nome": "Novo", "descricao": "Cliente recém-cadastrado no sistema."},
+        {"nome": "Em atendimento", "descricao": "Atendimento inicial realizado pela equipe."},
+        {"nome": "Aguardando documentos", "descricao": "Cliente precisa enviar documentos ou informações."},
+        {"nome": "Em análise", "descricao": "Caso em avaliação antes do avanço contratual."},
+        {"nome": "Contrato enviado", "descricao": "Contrato ou proposta já foi enviado ao cliente."},
+        {"nome": "Ativo", "descricao": "Cliente já assinou e segue ativo na carteira."},
+        {"nome": "Perdido", "descricao": "Cliente não avançou no fluxo de contratação."}
+    ] %}
+
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="topbar">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="logo-brand">JusFlow</div>
+            </div>
+
+            <div>
+                <h1 class="page-title">Detalhe do Cliente</h1>
+                <p class="page-subtitle">Visualização individual do cliente no JusFlow.</p>
+            </div>
+        </div>
+
+        <div class="hero-card">
+            <div class="hero-header">
+                <div>
+                    <div class="cliente-nome">{{ cliente.nome }}</div>
+                    <div class="cliente-meta">Registro individual do cliente no sistema</div>
+                </div>
+
+                <div class="status-box">
+                    <div class="status-label">Status atual</div>
+                    <div class="status-badge">{{ cliente.status }}</div>
+                </div>
+            </div>
+
+            <div class="hero-actions">
+                <a href="{{ url_for('clientes') }}" class="btn btn-outline-soft">Voltar para clientes</a>
+                <a href="{{ url_for('editar_cliente', id=cliente.id) }}" class="btn btn-brand">Editar cliente</a>
+                <a href="{{ url_for('cadastro_processo', cliente_id=cliente.id) }}" class="btn btn-brand">Cadastrar processo</a>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="section-title">Fluxo do cliente</div>
+
+            <div class="status-flow">
+                {% for etapa in fluxo_status %}
+                    <div class="flow-step {% if cliente.status == etapa.nome %}active{% endif %}">
+                        <div class="flow-step-number">Etapa {{ loop.index }}</div>
+                        <div class="flow-step-title">{{ etapa.nome }}</div>
+                        <div class="flow-step-desc">{{ etapa.descricao }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="section-title">Dados do cliente</div>
+
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Nome</div>
+                    <div class="info-value">{{ cliente.nome }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">CPF</div>
+                    <div class="info-value">{{ cliente.cpf }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Telefone</div>
+                    <div class="info-value">{{ cliente.telefone }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ cliente.email }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Tipo de causa</div>
+                    <div class="info-value">{{ cliente.tipo_causa }}</div>
+                </div>
+
+                <div class="info-item">
+                    <div class="info-label">Status</div>
+                    <div class="info-value">{{ cliente.status }}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="section-title">Processos do cliente</div>
+
+            {% if processos and processos|length > 0 %}
+                <div class="processos-lista">
+                    {% for processo in processos %}
+                        <div class="processo-card">
+                            <div class="processo-topo">
+                                <div class="processo-numero">
+                                    <a href="{{ url_for('detalhe_processo', id=processo.id) }}" class="processo-link">
+                                        Processo {{ processo.numero_processo }}
+                                    </a>
+                                </div>
+
+                                <div class="processo-status">
+                                    {{ processo.status_processo }}
+                                </div>
+                            </div>
+
+                            <div class="processo-grid">
+                                <div class="processo-campo">
+                                    <div class="processo-label">Número do processo</div>
+                                    <div class="processo-valor">{{ processo.numero_processo }}</div>
+                                </div>
+
+                                <div class="processo-campo">
+                                    <div class="processo-label">Data de abertura</div>
+                                    <div class="processo-valor">{{ processo.data_abertura }}</div>
+                                </div>
+
+                                <div class="processo-campo" style="grid-column: 1 / -1;">
+                                    <div class="processo-label">Descrição</div>
+                                    <div class="processo-valor">{{ processo.descricao }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-processos">
+                    Nenhum processo cadastrado ainda. Esta área já está preparada para receber os processos vinculados a este cliente futuramente.
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 JusFlow • Projeto acadêmico — Faculdade Impacta • Desenvolvido por Gedeão Lima
+    </footer>
+</body>
+</html>

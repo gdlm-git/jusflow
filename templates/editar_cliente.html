@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 body{
 font-family:'Inter',sans-serif;
 background:linear-gradient(180deg,#020617 0%,#0f172a 55%,#111827 100%);
@@ -76,14 +75,7 @@ font-weight:600;
 margin-bottom:8px;
 }
 
-.form-control{
-background:rgba(30,41,59,0.95);
-border:1px solid rgba(148,163,184,0.18);
-color:#f8fafc;
-border-radius:14px;
-padding:14px 16px;
-}
-
+.form-control,
 .form-select{
 background:rgba(30,41,59,0.95);
 border:1px solid rgba(148,163,184,0.18);
@@ -92,9 +84,16 @@ border-radius:14px;
 padding:14px 16px;
 }
 
+.form-control:focus,
+.form-select:focus{
+background:rgba(30,41,59,1);
+color:#ffffff;
+border-color:#3b82f6;
+box-shadow:0 0 0 0.2rem rgba(59,130,246,0.18);
+}
+
 .form-select option{
-background:#1e293b;
-color:#f8fafc;
+color:#000000;
 }
 
 .btn-brand{
@@ -121,7 +120,6 @@ padding:24px;
 color:#64748b;
 font-size:0.9rem;
 }
-
 </style>
 </head>
 
@@ -163,18 +161,29 @@ Edite as informações do cliente abaixo.
 <input type="email" name="email" class="form-control" value="{{ cliente[4] }}" required>
 </div>
 
-<div class="mb-4">
+<div class="mb-3">
 <label class="form-label">Tipo de Causa</label>
 <select name="tipo_causa" class="form-select" required>
-<option value="">Selecione uma opção</option>
 <option value="Trabalhista" {% if cliente[5] == 'Trabalhista' %}selected{% endif %}>Trabalhista</option>
-<option value="Cível" {% if cliente[5] == 'Cível' %}selected{% endif %}>Cível</option>
 <option value="Previdenciária" {% if cliente[5] == 'Previdenciária' %}selected{% endif %}>Previdenciária</option>
 <option value="Família" {% if cliente[5] == 'Família' %}selected{% endif %}>Família</option>
 <option value="Consumidor" {% if cliente[5] == 'Consumidor' %}selected{% endif %}>Consumidor</option>
 <option value="Criminal" {% if cliente[5] == 'Criminal' %}selected{% endif %}>Criminal</option>
 <option value="Tributária" {% if cliente[5] == 'Tributária' %}selected{% endif %}>Tributária</option>
 <option value="Outro" {% if cliente[5] == 'Outro' %}selected{% endif %}>Outro</option>
+</select>
+</div>
+
+<div class="mb-4">
+<label class="form-label">Status</label>
+<select name="status" class="form-select" required>
+<option value="Novo" {% if cliente[6] == 'Novo' %}selected{% endif %}>Novo</option>
+<option value="Em atendimento" {% if cliente[6] == 'Em atendimento' %}selected{% endif %}>Em atendimento</option>
+<option value="Aguardando documentos" {% if cliente[6] == 'Aguardando documentos' %}selected{% endif %}>Aguardando documentos</option>
+<option value="Em análise" {% if cliente[6] == 'Em análise' %}selected{% endif %}>Em análise</option>
+<option value="Contrato enviado" {% if cliente[6] == 'Contrato enviado' %}selected{% endif %}>Contrato enviado</option>
+<option value="Ativo" {% if cliente[6] == 'Ativo' %}selected{% endif %}>Ativo</option>
+<option value="Perdido" {% if cliente[6] == 'Perdido' %}selected{% endif %}>Perdido</option>
 </select>
 </div>
 

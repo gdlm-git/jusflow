@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-
 body{
 font-family:'Inter',sans-serif;
 background:linear-gradient(180deg,#020617 0%,#0f172a 55%,#111827 100%);
@@ -76,21 +75,7 @@ font-weight:600;
 margin-bottom:8px;
 }
 
-.form-control{
-background:rgba(30,41,59,0.95);
-border:1px solid rgba(148,163,184,0.18);
-color:#f8fafc;
-border-radius:14px;
-padding:14px 16px;
-}
-
-.form-control:focus{
-background:rgba(30,41,59,1);
-color:#ffffff;
-border-color:#3b82f6;
-box-shadow:0 0 0 0.2rem rgba(59,130,246,0.18);
-}
-
+.form-control,
 .form-select{
 background:rgba(30,41,59,0.95);
 border:1px solid rgba(148,163,184,0.18);
@@ -99,6 +84,7 @@ border-radius:14px;
 padding:14px 16px;
 }
 
+.form-control:focus,
 .form-select:focus{
 background:rgba(30,41,59,1);
 color:#ffffff;
@@ -107,8 +93,7 @@ box-shadow:0 0 0 0.2rem rgba(59,130,246,0.18);
 }
 
 .form-select option{
-background:#1e293b;
-color:#f8fafc;
+color:#000000;
 }
 
 .btn-brand{
@@ -143,7 +128,6 @@ padding:24px;
 color:#64748b;
 font-size:0.9rem;
 }
-
 </style>
 </head>
 
@@ -195,18 +179,30 @@ Preencha os dados abaixo para cadastrar um novo cliente no JusFlow.
 <input type="email" name="email" class="form-control" required>
 </div>
 
-<div class="mb-4">
+<div class="mb-3">
 <label class="form-label">Tipo de Causa</label>
 <select name="tipo_causa" class="form-select" required>
-<option value="">Selecione uma opção</option>
+<option value="">Selecione</option>
 <option value="Trabalhista">Trabalhista</option>
-<option value="Cível">Cível</option>
 <option value="Previdenciária">Previdenciária</option>
 <option value="Família">Família</option>
 <option value="Consumidor">Consumidor</option>
 <option value="Criminal">Criminal</option>
 <option value="Tributária">Tributária</option>
 <option value="Outro">Outro</option>
+</select>
+</div>
+
+<div class="mb-4">
+<label class="form-label">Status</label>
+<select name="status" class="form-select" required>
+<option value="Novo" selected>Novo</option>
+<option value="Em atendimento">Em atendimento</option>
+<option value="Aguardando documentos">Aguardando documentos</option>
+<option value="Em análise">Em análise</option>
+<option value="Contrato enviado">Contrato enviado</option>
+<option value="Ativo">Ativo</option>
+<option value="Perdido">Perdido</option>
 </select>
 </div>
 

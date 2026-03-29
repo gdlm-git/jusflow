@@ -1,295 +1,295 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JusFlow - Clientes</title>
 
-<title>JusFlow - Clientes</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #020617 0%, #0f172a 55%, #111827 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-<style>
-body{
-    font-family:'Inter',sans-serif;
-    background:linear-gradient(180deg,#020617 0%,#0f172a 55%,#111827 100%);
-    color:#f8fafc;
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-}
+        .container-fluid {
+            flex-grow: 1;
+        }
 
-.container-fluid{
-    flex-grow:1;
-}
+        .topbar {
+            padding: 28px 0 10px;
+        }
 
-.topbar{
-    padding:28px 0 10px;
-}
+        .logo-brand {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #93c5fd;
+            letter-spacing: 0.5px;
+        }
 
-.logo-brand{
-    font-size:1.4rem;
-    font-weight:800;
-    color:#93c5fd;
-    letter-spacing:0.5px;
-}
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 6px;
+        }
 
-.page-title{
-    font-size:2.2rem;
-    font-weight:800;
-    margin-bottom:6px;
-}
+        .page-subtitle {
+            color: #94a3b8;
+            margin-bottom: 0;
+        }
 
-.page-subtitle{
-    color:#94a3b8;
-    margin-bottom:0;
-}
+        .content-panel {
+            margin-top: 24px;
+            background: rgba(15, 23, 42, 0.85);
+            border: 1px solid rgba(148, 163, 184, 0.12);
+            border-radius: 22px;
+            padding: 24px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+        }
 
-.content-panel{
-    margin-top:24px;
-    background:rgba(15,23,42,0.85);
-    border:1px solid rgba(148,163,184,0.12);
-    border-radius:22px;
-    padding:24px;
-    box-shadow:0 20px 45px rgba(0,0,0,0.28);
-}
+        .btn-brand {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border: none;
+            color: white;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 18px;
+        }
 
-.btn-brand{
-    background:linear-gradient(135deg,#3b82f6,#2563eb);
-    border:none;
-    color:white;
-    font-weight:600;
-    border-radius:12px;
-    padding:10px 18px;
-}
+        .btn-brand:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        }
 
-.btn-brand:hover{
-    background:linear-gradient(135deg,#2563eb,#1d4ed8);
-}
+        .btn-outline-soft {
+            background: transparent;
+            border: 1px solid rgba(148, 163, 184, 0.28);
+            color: #e2e8f0;
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 10px 18px;
+        }
 
-.btn-outline-soft{
-    background:transparent;
-    border:1px solid rgba(148,163,184,0.28);
-    color:#e2e8f0;
-    font-weight:600;
-    border-radius:12px;
-    padding:10px 18px;
-}
+        .btn-outline-soft:hover {
+            background: rgba(148, 163, 184, 0.08);
+            color: white;
+        }
 
-.btn-outline-soft:hover{
-    background:rgba(148,163,184,0.08);
-    color:white;
-}
+        .btn-edit {
+            background: rgba(59, 130, 246, 0.14);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.28);
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 8px 14px;
+            text-decoration: none;
+        }
 
-.btn-edit{
-    background:rgba(59,130,246,0.14);
-    color:#93c5fd;
-    border:1px solid rgba(59,130,246,0.28);
-    font-weight:600;
-    border-radius:10px;
-    padding:8px 14px;
-    text-decoration:none;
-}
+        .btn-edit:hover {
+            background: rgba(59, 130, 246, 0.22);
+            color: #dbeafe;
+        }
 
-.btn-edit:hover{
-    background:rgba(59,130,246,0.22);
-    color:#dbeafe;
-}
+        .btn-delete {
+            background: rgba(239, 68, 68, 0.12);
+            color: #fca5a5;
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            font-weight: 600;
+            border-radius: 10px;
+            padding: 8px 14px;
+            text-decoration: none;
+        }
 
-.btn-delete{
-    background:rgba(239,68,68,0.12);
-    color:#fca5a5;
-    border:1px solid rgba(239,68,68,0.25);
-    font-weight:600;
-    border-radius:10px;
-    padding:8px 14px;
-    text-decoration:none;
-}
+        .btn-delete:hover {
+            background: rgba(239, 68, 68, 0.22);
+            color: #fee2e2;
+        }
 
-.btn-delete:hover{
-    background:rgba(239,68,68,0.22);
-    color:#fee2e2;
-}
+        .search-input {
+            background: rgba(30, 41, 59, 0.95);
+            border: 1px solid rgba(148, 163, 184, 0.18);
+            color: #f8fafc;
+            border-radius: 12px;
+            padding: 12px 14px;
+        }
 
-.search-input{
-    background:rgba(30,41,59,0.95);
-    border:1px solid rgba(148,163,184,0.18);
-    color:#f8fafc;
-    border-radius:12px;
-    padding:12px 14px;
-}
+        .search-input:focus {
+            background: rgba(30, 41, 59, 1);
+            color: #ffffff;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.18);
+        }
 
-.search-input:focus{
-    background:rgba(30,41,59,1);
-    color:#ffffff;
-    border-color:#3b82f6;
-    box-shadow:0 0 0 0.2rem rgba(59,130,246,0.18);
-}
+        .search-input::placeholder {
+            color: #64748b;
+        }
 
-.search-input::placeholder{
-    color:#64748b;
-}
+        .table {
+            color: #e2e8f0;
+        }
 
-.table{
-    color:#e2e8f0;
-}
+        .table thead th {
+            background: rgba(30, 41, 59, 0.95);
+            color: #93c5fd;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+            font-weight: 700;
+            padding: 16px;
+        }
 
-.table thead th{
-    background:rgba(30,41,59,0.95);
-    color:#93c5fd;
-    border-bottom:1px solid rgba(148,163,184,0.12);
-    font-weight:700;
-    padding:16px;
-}
+        .table tbody td {
+            color: #e2e8f0;
+            background: transparent;
+            border-bottom: 1px solid rgba(148, 163, 184, 0.08);
+            padding: 16px;
+            vertical-align: middle;
+        }
 
-.table tbody td{
-    color:#e2e8f0;
-    background:transparent;
-    border-bottom:1px solid rgba(148,163,184,0.08);
-    padding:16px;
-    vertical-align:middle;
-}
+        .table tbody tr:hover td {
+            background: rgba(30, 41, 59, 0.38);
+        }
 
-.table tbody tr:hover td{
-    background:rgba(30,41,59,0.38);
-}
+        .client-name {
+            font-weight: 700;
+            color: #f8fafc;
+        }
 
-.client-name{
-    font-weight:700;
-    color:#f8fafc;
-}
+        .client-name a:hover {
+            opacity: 0.85;
+        }
 
-.alert-success{
-    background:rgba(34,197,94,0.12);
-    color:#bbf7d0;
-    border:1px solid rgba(34,197,94,0.28);
-    border-radius:14px;
-    padding:14px 16px;
-}
+        .alert-success {
+            background: rgba(34, 197, 94, 0.12);
+            color: #bbf7d0;
+            border: 1px solid rgba(34, 197, 94, 0.28);
+            border-radius: 14px;
+            padding: 14px 16px;
+        }
 
-footer{
-    text-align:center;
-    padding:24px;
-    margin-top:auto;
-    color:#64748b;
-    font-size:0.9rem;
-}
-</style>
+        footer {
+            text-align: center;
+            padding: 24px;
+            margin-top: auto;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
 </head>
 
 <body>
+    <div class="container-fluid px-4 px-lg-5">
+        <div class="topbar">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="logo-brand">
+                    JusFlow
+                </div>
 
-<div class="container-fluid px-4 px-lg-5">
-
-    <div class="topbar">
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-
-            <div class="logo-brand">
-                JusFlow
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="/cadastro" class="btn btn-brand">Cadastrar Cliente</a>
+                    <a href="{{ url_for('home') }}" class="btn btn-outline-soft">Voltar para início</a>
+                </div>
             </div>
 
-            <div class="d-flex flex-wrap gap-2">
-                <a href="/cadastro" class="btn btn-brand">Cadastrar Cliente</a>
-                <a href="{{ url_for('home') }}" class="btn btn-outline-soft">Voltar para início</a>
+            <div>
+                <h1 class="page-title">Lista de Clientes</h1>
+                <p class="page-subtitle">Visualize, edite e gerencie os clientes cadastrados no JusFlow.</p>
             </div>
-
         </div>
 
-        <div>
-            <h1 class="page-title">Lista de Clientes</h1>
-            <p class="page-subtitle">Visualize, edite e gerencie os clientes cadastrados no JusFlow.</p>
-        </div>
+        <div class="content-panel">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <div id="flash-message" class="mb-4">
+                        <div class="alert alert-success">
+                            {{ messages[0] }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endwith %}
 
-    </div>
-
-    <div class="content-panel">
-
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div id="flash-message" class="mb-4">
-                    <div class="alert alert-success">
-                        {{ messages[0] }}
+            <form method="GET" action="/clientes" class="mb-4">
+                <div class="row g-2">
+                    <div class="col-md-9">
+                        <input
+                            type="text"
+                            name="busca"
+                            class="form-control search-input"
+                            placeholder="Buscar por nome ou CPF..."
+                        >
+                    </div>
+                    <div class="col-md-3">
+                        <button type="submit" class="btn btn-brand w-100">Buscar</button>
                     </div>
                 </div>
-            {% endif %}
-        {% endwith %}
+            </form>
 
-        <form method="GET" action="/clientes" class="mb-4">
-            <div class="row g-2">
-                <div class="col-md-9">
-                    <input
-                        type="text"
-                        name="busca"
-                        class="form-control search-input"
-                        placeholder="Buscar por nome ou CPF..."
-                    >
-                </div>
-                <div class="col-md-3">
-                    <button type="submit" class="btn btn-brand w-100">Buscar</button>
-                </div>
+            <div class="table-responsive">
+                <table class="table align-middle">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Tipo de Causa</th>
+                            <th>Status</th>
+                            <th style="width: 220px;">Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for cliente in clientes %}
+                            <tr>
+                                <td class="client-name">
+                                    <a href="/cliente/{{ cliente.id }}" style="color: inherit; text-decoration: none;">
+                                        {{ cliente.nome }}
+                                    </a>
+                                </td>
+                                <td>{{ cliente.cpf }}</td>
+                                <td>{{ cliente.telefone }}</td>
+                                <td>{{ cliente.email }}</td>
+                                <td>{{ cliente.tipo_causa }}</td>
+                                <td>{{ cliente.status }}</td>
+                                <td>
+                                    <div class="d-flex gap-2 flex-wrap">
+                                        <a href="/editar-cliente/{{ cliente.id }}" class="btn-edit">Editar</a>
+
+                                        <a
+                                            href="/excluir-cliente/{{ cliente.id }}"
+                                            onclick="return confirm('Deseja excluir este cliente?')"
+                                            class="btn-delete"
+                                        >
+                                            Excluir
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
             </div>
-        </form>
-
-        <div class="table-responsive">
-            <table class="table align-middle">
-                <thead>
-                    <tr>
-                        <th>Nome</th>
-                        <th>CPF</th>
-                        <th>Telefone</th>
-                        <th>Email</th>
-                        <th>Tipo de Causa</th>
-                        <th style="width:220px;">Ações</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for cliente in clientes %}
-                    <tr>
-                        <td class="client-name">{{ cliente[1] }}</td>
-                        <td>{{ cliente[2] }}</td>
-                        <td>{{ cliente[3] }}</td>
-                        <td>{{ cliente[4] }}</td>
-                        <td>{{ cliente[5] }}</td>
-                        <td>
-                            <div class="d-flex gap-2 flex-wrap">
-                                <a href="/editar-cliente/{{ cliente[0] }}" class="btn-edit">Editar</a>
-
-                                <a href="/excluir-cliente/{{ cliente[0] }}"
-                                   onclick="return confirm('Deseja excluir este cliente?')"
-                                   class="btn-delete">
-                                    Excluir
-                                </a>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-
-            </table>
         </div>
-
     </div>
 
-</div>
+    <footer>
+        &copy; 2026 JusFlow • Projeto acadêmico — Faculdade Impacta • Desenvolvido por Gedeão Lima
+    </footer>
 
-<footer>
-    &copy; 2026 JusFlow • Projeto acadêmico — Faculdade Impacta • Desenvolvido por Gedeão Lima
-</footer>
-
-<script>
-setTimeout(function() {
-    const flash = document.getElementById("flash-message");
-    if (flash) {
-        flash.style.transition = "opacity 0.5s ease";
-        flash.style.opacity = "0";
+    <script>
         setTimeout(function() {
-            flash.remove();
-        }, 500);
-    }
-}, 3000);
-</script>
-
+            const flash = document.getElementById("flash-message");
+            if (flash) {
+                flash.style.transition = "opacity 0.5s ease";
+                flash.style.opacity = "0";
+                setTimeout(function() {
+                    flash.remove();
+                }, 500);
+            }
+        }, 3000);
+    </script>
 </body>
 </html>
