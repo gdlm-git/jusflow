@@ -21,12 +21,20 @@ O sistema foi desenvolvido com foco em demonstrar conceitos de **CRUD, autentica
 - Validação para evitar CPF duplicado
 - Mensagens de sucesso ao salvar alterações
 
+- Cadastro de processos vinculado a cliente existente (via CPF)
+- Cadastro de processo direto pelo cliente
+- Listagem de processos
+- Edição de processos
+- Exclusão de processos
+- Validação de cliente existente ao cadastrar processo
+
 ---
 
 ##  Tecnologias utilizadas
 
 - Python
 - Flask
+- PostgreSQL (Supabase)
 - HTML
 - Bootstrap
 - Git
