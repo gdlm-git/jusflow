@@ -159,7 +159,6 @@ font-size:0.9rem;
 
 <body>
 
-<!-- LOGO DO SISTEMA -->
 <div class="logo-brand">
 JusFlow
 </div>
@@ -199,11 +198,9 @@ Consulte todos os clientes cadastrados, visualize dados e gerencie registros.
 <a href="{{ url_for('clientes') }}" class="btn btn-brand">
 Abrir Lista
 </a>
-
 </div>
 
 <div class="action-card">
-
 <h5>Cadastrar Cliente</h5>
 
 <p>
@@ -213,7 +210,18 @@ Adicione um novo cliente ao sistema com os dados principais para acompanhamento.
 <a href="{{ url_for('cadastro') }}" class="btn btn-outline-brand">
 Novo Cadastro
 </a>
+</div>
 
+<div class="action-card">
+<h5>Ver Processos</h5>
+
+<p>
+Consulte todos os processos cadastrados, acompanhe status e visualize os detalhes.
+</p>
+
+<a href="{{ url_for('processos') }}" class="btn btn-brand">
+Abrir Lista
+</a>
 </div>
 
 </div>
