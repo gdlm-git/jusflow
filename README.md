@@ -27,7 +27,13 @@ O sistema foi desenvolvido com foco em demonstrar conceitos de **CRUD, autentica
 - Edição de processos
 - Exclusão de processos
 - Validação de cliente existente ao cadastrar processo
-
+- Landing Page pública para solicitação de atendimento jurídico
+- Captação de clientes via formulário online
+- Cadastro automático de leads na base de clientes
+- Definição automática do status inicial do cliente como Novo
+- Integração da Landing Page com o backend Flask
+- Persistência dos dados captados no PostgreSQL (Supabase)
+- Feedback visual de sucesso após envio da solicitação
 ---
 
 ##  Tecnologias utilizadas
@@ -43,3 +49,6 @@ O sistema foi desenvolvido com foco em demonstrar conceitos de **CRUD, autentica
 ---
 
 ## 📂 Estrutura do projeto
+- `templates/landing_page.html`: página pública de captação de clientes
+- `static/imagens/`: pasta de imagens utilizadas na Landing Page
+---

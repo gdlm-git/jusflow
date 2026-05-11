@@ -34,10 +34,60 @@ def home():
     return render_template("home.html")
 
 
+@app.route("/solicitar-atendimento")
+def solicitar_atendimento():
+    return render_template("landing_page.html")
+
+
 @app.route("/cadastro")
 def cadastro():
     return render_template("cadastro.html")
 
+
+@app.route("/captar-lead", methods=["POST"])
+def captar_lead():
+    nome = request.form["nome"].strip()
+    cpf = request.form["cpf"].strip()
+    telefone = request.form["telefone"].strip()
+    email = request.form["email"].strip()
+    tipo_causa = request.form["tipo_causa"].strip()
+
+    status = "Novo"
+
+    if not nome or not cpf or not telefone or not email or not tipo_causa:
+        flash("Preencha todos os campos antes de enviar.")
+        return redirect(url_for("solicitar_atendimento"))
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT id FROM clientes WHERE cpf = %s",
+        (cpf,)
+    )
+
+    cliente_existente = cursor.fetchone()
+
+    if cliente_existente:
+        cursor.close()
+        conn.close()
+        flash("Já existe um cliente com este CPF!")
+        return redirect(url_for("solicitar_atendimento"))
+
+    cursor.execute(
+        """
+        INSERT INTO clientes (nome, cpf, telefone, email, tipo_causa, status)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        """,
+        (nome, cpf, telefone, email, tipo_causa, status)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("Solicitação enviada com sucesso! Em breve entraremos em contato.")
+    return redirect(url_for("solicitar_atendimento"))
 
 @app.route("/salvar-cliente", methods=["POST"])
 def salvar_cliente():
