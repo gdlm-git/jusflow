@@ -41,7 +41,7 @@ flex-grow:1;
 
 .home-card{
 width:100%;
-max-width:900px;
+max-width:1100px;
 background:rgba(15,23,42,0.82);
 border:1px solid rgba(148,163,184,0.15);
 border-radius:28px;
@@ -221,6 +221,18 @@ Consulte todos os processos cadastrados, acompanhe status e visualize os detalhe
 
 <a href="{{ url_for('processos') }}" class="btn btn-brand">
 Abrir Lista
+</a>
+</div>
+
+<div class="action-card">
+<h5>Dashboard</h5>
+
+<p>
+Visualize indicadores, relatórios e métricas do escritório em tempo real.
+</p>
+
+<a href="{{ url_for('dashboard') }}" class="btn btn-outline-brand">
+Ver Dashboard
 </a>
 </div>
 

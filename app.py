@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, Response, session
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
@@ -19,9 +19,19 @@ def login():
 
 @app.route("/entrar", methods=["POST"])
 def entrar():
+
     email = request.form["email"]
     senha = request.form["senha"]
-    return redirect(url_for("home"))
+
+    email_correto = "admin@jusflow.com"
+    senha_correta = "JusFlow2026!"
+
+    if email == email_correto and senha == senha_correta:
+        session["usuario_logado"] = True
+        return redirect(url_for("home"))
+
+    flash("Email ou senha inválidos.")
+    return redirect(url_for("login"))
 
 
 @app.route("/logout")
@@ -31,8 +41,277 @@ def logout():
 
 @app.route("/home")
 def home():
+    if "usuario_logado" not in session:
+        return redirect(url_for("login"))
+
     return render_template("home.html")
 
+@app.route("/dashboard")
+def dashboard():
+    tipo_filtro = request.args.get("tipo_processo", "").strip()
+    status_filtro = request.args.get("status_processo", "").strip()
+    data_inicio = request.args.get("data_inicio", "").strip()
+    data_fim = request.args.get("data_fim", "").strip()
+
+    filtros = []
+    parametros = []
+
+    if tipo_filtro:
+        filtros.append("p.tipo_processo = %s")
+        parametros.append(tipo_filtro)
+
+    if status_filtro:
+        filtros.append("p.status_processo = %s")
+        parametros.append(status_filtro)
+
+    if data_inicio:
+        filtros.append("p.data_abertura >= %s")
+        parametros.append(data_inicio)
+
+    if data_fim:
+        filtros.append("p.data_abertura <= %s")
+        parametros.append(data_fim)
+
+    where_sql = ""
+    if filtros:
+        where_sql = "WHERE " + " AND ".join(filtros)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    if filtros:
+        cursor.execute(f"""
+            SELECT COUNT(DISTINCT c.id)
+            FROM clientes c
+            JOIN processos p ON p.cliente_id = c.id
+            {where_sql}
+        """, parametros)
+        total_clientes = cursor.fetchone()[0]
+    else:
+        cursor.execute("SELECT COUNT(*) FROM clientes")
+        total_clientes = cursor.fetchone()[0]
+
+    cursor.execute(f"""
+        SELECT COUNT(*)
+        FROM processos p
+        {where_sql}
+    """, parametros)
+    total_processos = cursor.fetchone()[0]
+
+    if filtros:
+        cursor.execute(f"""
+            SELECT COUNT(DISTINCT c.id)
+            FROM clientes c
+            JOIN processos p ON p.cliente_id = c.id
+            {where_sql}
+            AND c.status = %s
+        """, parametros + ["Novo"])
+        total_leads_novos = cursor.fetchone()[0]
+    else:
+        cursor.execute("SELECT COUNT(*) FROM clientes WHERE status = %s", ("Novo",))
+        total_leads_novos = cursor.fetchone()[0]
+
+    cursor.execute(f"""
+        SELECT COUNT(*)
+        FROM processos p
+        {where_sql}
+        {"AND" if where_sql else "WHERE"} p.status_processo = %s
+    """, parametros + ["Em andamento"])
+    total_em_andamento = cursor.fetchone()[0]
+
+    if filtros:
+        cursor.execute(f"""
+            SELECT DISTINCT c.nome, c.tipo_causa, c.status, c.created_at
+            FROM clientes c
+            JOIN processos p ON p.cliente_id = c.id
+            {where_sql}
+            ORDER BY c.created_at DESC
+            LIMIT 5
+        """, parametros)
+        ultimos_clientes = cursor.fetchall()
+    else:
+        cursor.execute("""
+            SELECT nome, tipo_causa, status, created_at
+            FROM clientes
+            ORDER BY created_at DESC
+            LIMIT 5
+        """)
+        ultimos_clientes = cursor.fetchall()
+
+    if filtros:
+        cursor.execute(f"""
+            SELECT c.status, COUNT(DISTINCT c.id)
+            FROM clientes c
+            JOIN processos p ON p.cliente_id = c.id
+            {where_sql}
+            GROUP BY c.status
+            ORDER BY c.status
+        """, parametros)
+        clientes_por_status = cursor.fetchall()
+    else:
+        cursor.execute("""
+            SELECT status, COUNT(*)
+            FROM clientes
+            GROUP BY status
+            ORDER BY status
+        """)
+        clientes_por_status = cursor.fetchall()
+
+    cursor.execute(f"""
+        SELECT p.tipo_processo, COUNT(*)
+        FROM processos p
+        {where_sql}
+        GROUP BY p.tipo_processo
+        ORDER BY p.tipo_processo
+    """, parametros)
+    processos_por_area = cursor.fetchall()
+
+    cursor.execute(f"""
+        SELECT COALESCE(SUM(p.valor_causa), 0)
+        FROM processos p
+        {where_sql}
+    """, parametros)
+    valor_total_causas = cursor.fetchone()[0]
+
+    cursor.execute(f"""
+        SELECT p.status_processo, COUNT(*)
+        FROM processos p
+        {where_sql}
+        GROUP BY p.status_processo
+        ORDER BY p.status_processo
+    """, parametros)
+    processos_por_status = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT DISTINCT tipo_processo
+        FROM processos
+        WHERE tipo_processo IS NOT NULL
+        ORDER BY tipo_processo
+    """)
+    tipos_processo = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT DISTINCT status_processo
+        FROM processos
+        WHERE status_processo IS NOT NULL
+        ORDER BY status_processo
+    """)
+    status_processos = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "dashboard.html",
+        total_clientes=total_clientes,
+        total_processos=total_processos,
+        total_leads_novos=total_leads_novos,
+        total_em_andamento=total_em_andamento,
+        ultimos_clientes=ultimos_clientes,
+        clientes_por_status=clientes_por_status,
+        processos_por_area=processos_por_area,
+        valor_total_causas=valor_total_causas,
+        processos_por_status=processos_por_status,
+        tipos_processo=tipos_processo,
+        status_processos=status_processos,
+        tipo_filtro=tipo_filtro,
+        status_filtro=status_filtro,
+        data_inicio=data_inicio,
+        data_fim=data_fim
+    )
+@app.route("/exportar-dashboard")
+def exportar_dashboard():
+    tipo_filtro = request.args.get("tipo_processo", "").strip()
+    status_filtro = request.args.get("status_processo", "").strip()
+    data_inicio = request.args.get("data_inicio", "").strip()
+    data_fim = request.args.get("data_fim", "").strip()
+
+    filtros = []
+    parametros = []
+
+    if tipo_filtro:
+        filtros.append("p.tipo_processo = %s")
+        parametros.append(tipo_filtro)
+
+    if status_filtro:
+        filtros.append("p.status_processo = %s")
+        parametros.append(status_filtro)
+
+    if data_inicio:
+        filtros.append("p.data_abertura >= %s")
+        parametros.append(data_inicio)
+
+    if data_fim:
+        filtros.append("p.data_abertura <= %s")
+        parametros.append(data_fim)
+
+    where_sql = ""
+    if filtros:
+        where_sql = "WHERE " + " AND ".join(filtros)
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(f"""
+        SELECT
+            c.nome,
+            c.cpf,
+            c.email,
+            c.telefone,
+            p.numero_processo,
+            p.tipo_processo,
+            p.status_processo,
+            p.data_abertura,
+            p.valor_causa,
+            p.advogado_responsavel
+        FROM processos p
+        JOIN clientes c ON p.cliente_id = c.id
+        {where_sql}
+        ORDER BY p.data_abertura DESC
+    """, parametros)
+
+    dados = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    linhas = []
+    linhas.append("Nome;CPF;Email;Telefone;Número do Processo;Tipo do Processo;Status do Processo;Data de Abertura;Valor da Causa;Advogado Responsável\n")
+
+    for item in dados:
+        data_formatada = item[7].strftime("%d/%m/%Y") if item[7] else ""
+        valor_formatado = (
+    f"R$ {float(item[8]):,.2f}"
+    .replace(",", "X")
+    .replace(".", ",")
+    .replace("X", ".")
+) if item[8] else "R$ 0,00"
+
+        linha = (
+            f"{item[0]};"
+            f'="{item[1]}";'
+            f"{item[2]};"
+            f'="{item[3]}";'
+            f"{item[4]};"
+            f"{item[5]};"
+            f"{item[6]};"
+            f"{data_formatada};"
+            f"{valor_formatado};"
+            f"{item[9]}\n"
+        )
+        linhas.append(linha)
+
+    csv = "".join(linhas)
+
+    csv = '\ufeff' + csv
+
+    return Response(
+        csv,
+        mimetype="text/csv",
+        headers={
+            "Content-Disposition": "attachment; filename=relatorio_jusflow.csv"
+        }
+    )    
 
 @app.route("/solicitar-atendimento")
 def solicitar_atendimento():

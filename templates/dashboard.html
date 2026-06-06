@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JusFlow - Dashboard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body{
+font-family:'Inter',sans-serif;
+background: radial-gradient(circle at top left, #1e3a8a 0%, #0f172a 35%, #020617 100%);
+min-height:100vh;
+color:#f8fafc;
+}
+
+.dashboard-container{
+max-width:1400px;
+margin:auto;
+padding:40px 20px;
+}
+
+.page-title{
+font-size:2.5rem;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.page-subtitle{
+color:#94a3b8;
+margin-bottom:30px;
+}
+
+.kpi-card{
+background:rgba(30,41,59,0.9);
+border:1px solid rgba(148,163,184,0.12);
+border-radius:20px;
+padding:24px;
+height:100%;
+}
+
+.kpi-title{
+font-size:14px;
+color:#94a3b8;
+margin-bottom:10px;
+}
+
+.kpi-value{
+font-size:38px;
+font-weight:800;
+}
+
+.section-card{
+background:rgba(15,23,42,0.85);
+border:1px solid rgba(148,163,184,0.12);
+border-radius:20px;
+padding:24px;
+margin-top:24px;
+height:100%;
+}
+
+.section-title{
+font-size:1.2rem;
+font-weight:700;
+margin-bottom:20px;
+}
+
+.btn-back{
+background:transparent;
+border:1px solid rgba(59,130,246,0.45);
+color:#bfdbfe;
+font-weight:600;
+border-radius:12px;
+padding:10px 18px;
+text-decoration:none;
+}
+
+.btn-back:hover{
+background:rgba(59,130,246,0.12);
+color:white;
+}
+
+.chart-box{
+height:280px;
+position:relative;
+}
+
+.form-label{
+color:#cbd5e1;
+font-size:0.9rem;
+font-weight:600;
+}
+
+.form-control,
+.form-select{
+background:#1e293b;
+border:1px solid rgba(148,163,184,0.25);
+color:#f8fafc;
+border-radius:12px;
+}
+
+.form-control:focus,
+.form-select:focus{
+background:#1e293b;
+color:#f8fafc;
+border-color:#3b82f6;
+box-shadow:none;
+}
+
+.btn-filter{
+background:linear-gradient(135deg,#3b82f6,#2563eb);
+border:none;
+color:white;
+font-weight:600;
+border-radius:12px;
+padding:10px 18px;
+text-decoration:none;
+}
+
+.btn-clear{
+background:transparent;
+border:1px solid rgba(148,163,184,0.3);
+color:#cbd5e1;
+font-weight:600;
+border-radius:12px;
+padding:10px 18px;
+text-decoration:none;
+}
+
+.btn-clear:hover{
+background:rgba(148,163,184,0.12);
+color:white;
+}
+
+.btn-export{
+background:#16a34a;
+color:white;
+border:none;
+font-weight:600;
+border-radius:12px;
+padding:10px 18px;
+text-decoration:none;
+}
+
+.btn-export:hover{
+background:#15803d;
+color:white;
+}
+
+.btn-filter,
+.btn-clear,
+.btn-export{
+height:44px;
+display:flex;
+align-items:center;
+justify-content:center;
+white-space:nowrap;
+}
+
+table{
+color:white !important;
+}
+
+.footer-note{
+margin-top:36px;
+padding:20px 0 8px;
+text-align:center;
+color:#94a3b8;
+font-size:0.9rem;
+border-top:1px solid rgba(148,163,184,0.16);
+}
+</style>
+</head>
+
+<body>
+
+<div class="dashboard-container">
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+
+<div>
+<h1 class="page-title">Dashboard JusFlow</h1>
+
+<p class="page-subtitle">
+Indicadores e relatórios gerenciais do escritório
+</p>
+</div>
+
+<div>
+<a href="{{ url_for('home') }}" class="btn-back">
+Voltar para Home
+</a>
+</div>
+
+</div>
+
+<div class="section-card mb-4">
+
+<h3 class="section-title">Filtros do Relatório</h3>
+
+<form method="GET" action="{{ url_for('dashboard') }}" class="row g-3">
+
+<div class="col-md-3">
+<label class="form-label">Tipo de Processo</label>
+<select name="tipo_processo" class="form-select">
+<option value="">Todos</option>
+{% for tipo in tipos_processo %}
+<option value="{{ tipo[0] }}" {% if tipo_filtro == tipo[0] %}selected{% endif %}>
+{{ tipo[0] }}
+</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-3">
+<label class="form-label">Status do Processo</label>
+<select name="status_processo" class="form-select">
+<option value="">Todos</option>
+{% for status in status_processos %}
+<option value="{{ status[0] }}" {% if status_filtro == status[0] %}selected{% endif %}>
+{{ status[0] }}
+</option>
+{% endfor %}
+</select>
+</div>
+
+<div class="col-md-1">
+<label class="form-label">Data Inicial</label>
+<input type="date" name="data_inicio" value="{{ data_inicio }}" class="form-control">
+</div>
+
+<div class="col-md-1">
+<label class="form-label">Data Final</label>
+<input type="date" name="data_fim" value="{{ data_fim }}" class="form-control">
+</div>
+
+<div class="col-md-3">
+<label class="form-label">&nbsp;</label>
+
+<div class="d-flex gap-2">
+
+<button type="submit" class="btn-filter">
+Aplicar
+</button>
+
+<a href="{{ url_for('dashboard') }}" class="btn-clear">
+Limpar
+</a>
+
+<a href="{{ url_for('exportar_dashboard',
+tipo_processo=tipo_filtro,
+status_processo=status_filtro,
+data_inicio=data_inicio,
+data_fim=data_fim) }}" class="btn-export">
+📊 Exportar
+</a>
+
+</div>
+</div>
+
+</form>
+
+</div>
+
+<div class="row g-3">
+
+<div class="col-md">
+<div class="kpi-card">
+<div class="kpi-title">Clientes</div>
+<div class="kpi-value">{{ total_clientes }}</div>
+</div>
+</div>
+
+<div class="col-md">
+<div class="kpi-card">
+<div class="kpi-title">Processos</div>
+<div class="kpi-value">{{ total_processos }}</div>
+</div>
+</div>
+
+<div class="col-md">
+<div class="kpi-card">
+<div class="kpi-title">Leads Novos</div>
+<div class="kpi-value">{{ total_leads_novos }}</div>
+</div>
+</div>
+
+<div class="col-md">
+<div class="kpi-card">
+<div class="kpi-title">Em Andamento</div>
+<div class="kpi-value">{{ total_em_andamento }}</div>
+</div>
+</div>
+
+<div class="col-md">
+<div class="kpi-card">
+<div class="kpi-title">Valor das Causas</div>
+<div class="kpi-value">
+R$ {{ "{:,.0f}".format(valor_total_causas).replace(",", ".") }}
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="row mt-1">
+
+<div class="col-md-6">
+<div class="section-card">
+<h3 class="section-title">Clientes por Status</h3>
+<div class="chart-box">
+<canvas id="clientesStatusChart"></canvas>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="section-card">
+<h3 class="section-title">Processos por Área Jurídica</h3>
+<div class="chart-box">
+<canvas id="processosAreaChart"></canvas>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="row mt-1">
+
+<div class="col-md-6">
+<div class="section-card">
+<h3 class="section-title">Processos por Status</h3>
+<div class="chart-box">
+<canvas id="processosStatusChart"></canvas>
+</div>
+</div>
+</div>
+
+<div class="col-md-6">
+<div class="section-card">
+<h3 class="section-title">Resumo Financeiro</h3>
+<div class="chart-box">
+<canvas id="resumoFinanceiroChart"></canvas>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="section-card">
+
+<h3 class="section-title">Últimos Clientes</h3>
+
+<table class="table table-dark table-hover">
+<thead>
+<tr>
+<th>Nome</th>
+<th>Área</th>
+<th>Status</th>
+<th>Data</th>
+</tr>
+</thead>
+
+<tbody>
+{% for cliente in ultimos_clientes %}
+<tr>
+<td>{{ cliente[0] }}</td>
+<td>{{ cliente[1] }}</td>
+<td>{{ cliente[2] }}</td>
+<td>{{ cliente[3].strftime('%d/%m/%Y') if cliente[3] else '' }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+</div>
+
+<footer class="footer-note">
+© 2026 JusFlow • Projeto acadêmico — Faculdade Impacta • Desenvolvido por Gedeão Lima
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+const clientesStatus = {{ clientes_por_status | tojson }};
+const processosArea = {{ processos_por_area | tojson }};
+const processosStatus = {{ processos_por_status | tojson }};
+const valorTotalCausas = {{ valor_total_causas | float }};
+
+const quantidadeOptions = {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+labels: {
+color: 'white'
+}
+}
+},
+scales: {
+x: {
+ticks: {
+color: 'white'
+},
+grid: {
+color: 'rgba(148,163,184,0.12)'
+}
+},
+y: {
+beginAtZero: true,
+ticks: {
+color: 'white',
+stepSize: 1,
+precision: 0
+},
+grid: {
+color: 'rgba(148,163,184,0.12)'
+}
+}
+}
+};
+
+const financeiroOptions = {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+labels: {
+color: 'white'
+}
+},
+tooltip: {
+callbacks: {
+label: function(context) {
+const valor = context.raw || 0;
+return 'R$ ' + valor.toLocaleString('pt-BR');
+}
+}
+}
+},
+scales: {
+x: {
+ticks: {
+color: 'white'
+},
+grid: {
+color: 'rgba(148,163,184,0.12)'
+}
+},
+y: {
+beginAtZero: true,
+ticks: {
+color: 'white',
+callback: function(value) {
+return 'R$ ' + value.toLocaleString('pt-BR');
+}
+},
+grid: {
+color: 'rgba(148,163,184,0.12)'
+}
+}
+}
+};
+
+new Chart(
+document.getElementById('clientesStatusChart'),
+{
+type: 'pie',
+data: {
+labels: clientesStatus.map(item => item[0]),
+datasets: [{
+data: clientesStatus.map(item => item[1])
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+labels: {
+color: 'white'
+}
+}
+}
+}
+}
+);
+
+new Chart(
+document.getElementById('processosAreaChart'),
+{
+type: 'bar',
+data: {
+labels: processosArea.map(item => item[0]),
+datasets: [{
+label: 'Quantidade',
+data: processosArea.map(item => item[1])
+}]
+},
+options: quantidadeOptions
+}
+);
+
+new Chart(
+document.getElementById('processosStatusChart'),
+{
+type: 'doughnut',
+data: {
+labels: processosStatus.map(item => item[0]),
+datasets: [{
+data: processosStatus.map(item => item[1])
+}]
+},
+options: {
+responsive: true,
+maintainAspectRatio: false,
+plugins: {
+legend: {
+labels: {
+color: 'white'
+}
+}
+}
+}
+}
+);
+
+new Chart(
+document.getElementById('resumoFinanceiroChart'),
+{
+type: 'bar',
+data: {
+labels: ['Valor Total das Causas'],
+datasets: [{
+label: 'Valor em R$',
+data: [valorTotalCausas]
+}]
+},
+options: financeiroOptions
+}
+);
+</script>
+
+</body>
+</html>
