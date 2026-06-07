@@ -385,10 +385,10 @@ R$ {{ "{:,.0f}".format(valor_total_causas).replace(",", ".") }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-const clientesStatus = {{ clientes_por_status | tojson }};
-const processosArea = {{ processos_por_area | tojson }};
-const processosStatus = {{ processos_por_status | tojson }};
-const valorTotalCausas = {{ valor_total_causas | float }};
+const clientesStatus = JSON.parse('{{ clientes_por_status | tojson | safe }}');
+const processosArea = JSON.parse('{{ processos_por_area | tojson | safe }}');
+const processosStatus = JSON.parse('{{ processos_por_status | tojson | safe }}');
+const valorTotalCausas = Number('{{ valor_total_causas | float }}');
 
 const quantidadeOptions = {
 responsive: true,
